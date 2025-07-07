@@ -17,7 +17,21 @@ export const CartSlice = createSlice({
         }
     },
     removeItem: (state, action) => {
-        state.items = state.items.filter(item => item.name !== action.payload);
+        let targetName;
+        if (typeof action.payload === 'string') {
+            targetName = action.payload;
+        } else if (
+            action.payload &&
+            typeof action.payload.name === 'string'
+        ) {
+            targetName = action.payload.name;
+        } else {
+            console.error('❌ removeItem got invalid payload:', action.payload);
+            return;
+        }
+
+        // now filter out by name
+        state.items = state.items.filter((i) => i.name !== targetName);
     },
     updateQuantity: (state, action) => {
         const { name, quantity } = action.payload;
